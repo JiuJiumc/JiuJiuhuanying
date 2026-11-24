@@ -1,12 +1,12 @@
 # CustomJoinMessages 啾啾欢迎奖励
 
-版本：17.12.0-jiujiu-svfix2；目标API Paper26.2，JDK25，Gradle9.8.2。
+版本：17.12.0-jiujiu-svfix3；目标API Paper26.2，JDK25，Gradle9.8.2。
 
 本工程以原作者v17.12.0完整源码为主体，保留旧正式服svfix1的SuperVanishVanishHook.java适配源码（逐字节复用），加入首登点击欢迎奖励100 J点及管理员测试功能。不是旧补丁工程原封不动重编；不使用JarRepair、ASM、字节码补丁或反编译代码。调度、奖励及构建适配按当前Folia与共享货币接口维护。保留原作者署名和GPL许可证。
 
-插件注册名及配置目录保持CustomJoinMessages，成品CustomJoinMessages.jar。旧命令/cjm、/customjoinmessages保留，/jiujiuhuanying仍作为别名。j货币通过JiuJiuLib，默认首次进服60秒内点击、每人每位新人一次、每日10次、不得自领。data/welcome-rewards.journal记录付款意图，未知结果不补发；原世界/玩家数据不清理。
+插件注册名及配置目录保持CustomJoinMessages，成品CustomJoinMessages.jar。旧命令/cjm、/customjoinmessages保留，/jiujiuhuanying仍作为别名。j货币通过JiuJiuLib，默认首次进服60秒内点击、每人每位新人一次、每日不限次数、不得自领。data/welcome-rewards.journal记录付款意图，未知结果不补发；原世界/玩家数据不清理。
 
-/cjm testwelcome 在线玩家 preview：仅管理员预览，不发钱；paid模式真实发奖并占每日上限，需另一名管理员点击。测试资格独立，不改真实首登记录。
+/cjm testwelcome 在线玩家 preview：仅管理员预览，不发钱；paid模式真实发奖，不限每日次数，需另一名管理员点击。测试资格独立，不改真实首登记录。
 
 配置以用户132321.zip为结构和开关基线，将玩家消息翻译中文；data/toggles.json及worlds.json不打入覆盖包，保留服务器现有数据。language:en管理命令语言保留。welcome-rewards.yml未知服务器自定义不覆盖，缺少时从JAR生成，已有时缺少消息使用默认值。
 
@@ -220,7 +220,7 @@ Still need personalized support? Subscribe to my [Patreon][patreon-url] and join
 [minimessage-url]: https://docs.advntr.dev/minimessage/index.html
 [legacy-color-codes-url]: https://minecraft.wiki/w/Formatting_codes#Color_codes
 
-管理员测试：`/cjm testwelcome <在线玩家> [preview|paid]`，默认preview不发钱；paid真实发奖且占每日次数。测试目标必须在线、已登录且未隐身。测试按钮只向具有 `jiujiuhuanying.test` 权限的其他管理员显示，目标不能自领，每轮一次；同一时间只开放一轮测试，60秒后可再次开。每轮使用独立随机记录，不重置真实进服/领奖记录。旧奖励配置保留，新提示缺项从内置默认值补齐，不覆盖原文件。MCSM控制台命令不加前导斜线。
+管理员测试：`/cjm testwelcome <在线玩家> [preview|paid]`，默认preview不发钱；paid真实发奖，不限每日次数。测试目标必须在线、已登录且未隐身。测试按钮只向具有 `jiujiuhuanying.test` 权限的其他管理员显示，目标不能自领，每轮一次；同一时间只开放一轮测试，60秒后可再次开。每轮使用独立随机记录，不重置真实进服/领奖记录。旧奖励配置保留，新提示缺项从内置默认值补齐，不覆盖原文件。MCSM控制台命令不加前导斜线。
 
 
 2026-11-24 隐身兼容恢复：识别SuperVanish的实际main为dev.philippcmd.supervanish.Main时，使用其公开getVanishManager().isVanished及VanishStateChangeEvent，不调用de.myzelyam接口。官方SuperVanish仍沿用官方挂钩。dependencies/SuperVanish-api-reference.jar仅作编译参考，不打入成品，不要求替换服务器隐身插件。服务器日志所示stealth4尚需实际验收，编译接口核对使用本地stealth3及D:/Github内同系列源码。

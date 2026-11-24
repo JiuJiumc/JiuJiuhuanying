@@ -30,7 +30,6 @@ class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
     private val config: YamlConfiguration
     private val amount: Double
     private val seconds: Int
-    private val dailyLimit: Int
     private val zone: ZoneId
     @Volatile private var closed = false
     @Volatile private var failed = false
@@ -45,10 +44,9 @@ class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
         }
         amount = config.getDouble("reward.amount", 100.0)
         seconds = config.getInt("window-seconds", 60)
-        dailyLimit = config.getInt("reward.daily-limit", 10)
         zone = ZoneId.of(config.getString("timezone", "Asia/Shanghai")!!)
         require(amount.isFinite() && amount > 0 && amount <= 1000000) { "reward.amount 必须在0以上、1000000以内" }
-        require(seconds in 5..600 && dailyLimit in 1..10000) { "欢迎时限须为5～600秒，每日上限须为1～10000" }
+        require(seconds in 5..600) { "欢迎时限须为5～600秒" }
         submit {
             try { ledger = WelcomeLedger(java.io.File(plugin.dataFolder, "data/welcome-rewards.journal").toPath()) }
             catch (error: Exception) { stopRewards(error) }
@@ -132,13 +130,13 @@ class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
                 if (closed || failed || window.deadline <= System.nanoTime()) { tell(who, "expired"); return@submit }
                 if (!window.paid) {
                     if (window.previewClaims.add(who)) { tell(who, "test-success", window.name); tell(window.target, "test-welcomed", welcomerName) }
-                    else tell(who, "already-or-limit")
+                    else tell(who, "already")
                     return@submit
                 }
                 val bank = CurrencyService.forPlugin(plugin)
                 if (!bank.available("j")) { tell(who, "unavailable"); return@submit }
-                if (ledger?.reserve(window.receipt, who, LocalDate.now(zone), dailyLimit, amount) != true) {
-                    tell(who, "already-or-limit"); return@submit
+                if (ledger?.reserve(window.receipt, who, LocalDate.now(zone), amount) != true) {
+                    tell(who, "already"); return@submit
                 }
                 // Intent is durable before calling the provider. Never retry failure/timeout/exception.
                 var success = false
@@ -157,7 +155,7 @@ class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
     private fun text(key: String, name: String = ""): String = ChatColor.translateAlternateColorCodes('&',
         config.getString("messages.$key", "&f[&4!&f] &c欢迎奖励暂不可用。")!!
             .replace("{player}", name).replace("{amount}", java.math.BigDecimal.valueOf(amount).stripTrailingZeros().toPlainString())
-            .replace("{seconds}", seconds.toString()).replace("{limit}", dailyLimit.toString()))
+            .replace("{seconds}", seconds.toString()))
     private fun tell(who: UUID, key: String, name: String = "") {
         if (closed) return
         val player = Bukkit.getPlayer(who) ?: return

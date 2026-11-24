@@ -13,7 +13,6 @@ public final class WelcomeLedger {
     private final Path file;
     private final Set<UUID> newcomers = new HashSet<>();
     private final Set<String> claims = new HashSet<>();
-    private final Map<String,Integer> daily = new HashMap<>();
     public WelcomeLedger(Path file) throws IOException {
         this.file=file;
         Files.createDirectories(file.getParent());
@@ -29,7 +28,6 @@ public final class WelcomeLedger {
                         double amount=Double.parseDouble(fields[4]);
                         if(!Double.isFinite(amount)||amount<=0) throw new IllegalArgumentException();
                         if(!claims.add(target+"|"+who)) throw new IllegalArgumentException("duplicate intent");
-                        daily.merge(who+"|"+fields[3],1,Integer::sum);
                     } else if(fields.length==4 && fields[0].equals("R") && Set.of("PAID","REVIEW").contains(fields[3])) {
                         if(!claims.contains(UUID.fromString(fields[1])+"|"+UUID.fromString(fields[2]))) throw new IllegalArgumentException();
                     } else throw new IllegalArgumentException("invalid journal row");
@@ -43,12 +41,12 @@ public final class WelcomeLedger {
         newcomers.add(target);
         return true;
     }
-    public boolean reserve(UUID target, UUID who, LocalDate day, int limit, double amount) throws IOException {
+    public boolean reserve(UUID target, UUID who, LocalDate day, double amount) throws IOException {
         if(target.equals(who)||!newcomers.contains(target)||!Double.isFinite(amount)||amount<=0) return false;
-        String key=target+"|"+who, dailyKey=who+"|"+day;
-        if(claims.contains(key)||daily.getOrDefault(dailyKey,0)>=limit) return false;
+        String key=target+"|"+who;
+        if(claims.contains(key)) return false;
         append("P|"+key+"|"+day+"|"+amount);
-        claims.add(key); daily.merge(dailyKey,1,Integer::sum);
+        claims.add(key);
         return true;
     }
     public void finish(UUID target, UUID who, boolean success) throws IOException {

@@ -3,14 +3,13 @@
 enabled: true
 # 点击有效期，5～600秒；到期后的旧按钮不能领奖。
 window-seconds: 60
-# 每日上限按此时区跨日，不按玩家电脑时间计算。
+# 领奖日志日期使用此时区，不限制每日次数。
 timezone: Asia/Shanghai
 reward:
   # 每名欢迎者每位新人只领一次；J点通过JiuJiuLib的j货币接口发放。
   amount: 100
-  # 每人每日最多欢迎奖励次数，1～10000；结果待核对也占次数，避免重试刷钱。
-  daily-limit: 10
-# 使用&颜色码；可用变量：{player}新人名、{amount}金额、{seconds}有效秒数、{limit}每日上限。
+  # 不限制每天欢迎人数；同一欢迎者对同一新人只能领奖一次。
+# 使用&颜色码；可用变量：{player}新人名、{amount}金额、{seconds}有效秒数。
 # 整条invite提示可点击，运行/cjm welcome 随机令牌；不要手填新人UUID冒充令牌。
 messages:
   # 测试按钮仅有jiujiuhuanying.test权限的人可见，目标玩家仍不能自领。
@@ -25,7 +24,7 @@ messages:
   welcomed: '&f[&4!&f] &b{player} &a欢迎你加入，祝你玩得开心！'
   expired: '&f[&4!&f] &7这次欢迎已结束。'
   self: '&f[&4!&f] &e不能欢迎自己领取奖励。'
-  already-or-limit: '&f[&4!&f] &e你已欢迎过这位新人，或今日已达到{limit}次上限。'
+  already: '&f[&4!&f] &e你已欢迎过这位新人，不能重复领奖。'
   unavailable: '&f[&4!&f] &c欢迎奖励暂不可用，请稍后联系管理员。'
   busy: '&f[&4!&f] &e欢迎操作繁忙，请稍后在有效期内再点。'
   review: '&f[&4!&f] &e这次奖励需要管理员核对，请勿重复领取。'
