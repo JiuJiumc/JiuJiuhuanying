@@ -23,8 +23,8 @@ import org.bukkit.OfflinePlayer
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-@CommandAlias("cjm|customjoinmessages")
-@Description("Base command for Custom Join Messages.")
+@CommandAlias("cjm|customjoinmessages|jiujiuhuanying")
+@Description("Base command for JiuJiuhuanying.")
 @Suppress("UNUSED")
 class CjmCommand(private val manager: BukkitCommandManager, private val plugin: CustomJoinMessages) : BaseCommand() {
 

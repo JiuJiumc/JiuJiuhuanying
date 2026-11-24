@@ -1,3 +1,17 @@
+# JiuJiuhuanying
+
+由 [Insprill/custom-join-messages](https://github.com/Insprill/custom-join-messages) Fork 的啾啾进退服消息插件，保留原作者署名与 GPL-3.0 许可证。
+
+2026-11-24：插件注册名、工程名和成品文件名改为 `JiuJiuhuanying` / `JiuJiuhuanying.jar`；保留原包名、主类、`cjm.*` 权限和旧命令，新增 `/jiujiuhuanying` 别名。内部版本为 `17.12.0-jiujiu.1`，默认附上游构建提交信息。
+
+本工程是上游完整源码的改名分支，不含历史 `17.12.0-jiujiu-svfix1` 的定制 SuperVanish 补丁，不使用 ASM 或二进制补丁构建。未完成 Shiroha/Folia 26.2 实服兼容验证，不应直接替换现有正式服。
+
+构建沿用原 Gradle Wrapper，要求 JDK 25：Windows 使用 `gradlew.bat build`，其他系统使用 `./gradlew build`。上游当前编译 API 指向 26.3；本次只改名，未将其声明为已适配 26.2。输出为 `build/libs/JiuJiuhuanying.jar`。首次安装后的数据目录为 `plugins/JiuJiuhuanying`，不会自动迁移 `plugins/CustomJoinMessages`；不要同时加载两份插件。
+
+以下为保留的上游说明，其中下载、统计及发布平台链接指向原作者项目；Fork 的自动第三方发布已限制到上游仓库。
+
+---
+
 [![Spigot Downloads][spigot-downloads-shield]][spigot-url]
 [![bStats Servers][bstats-servers-shield]][bstats-url]
 [![Spigot Rating][spigot-rating-shield]][spigot-url]

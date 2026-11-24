@@ -22,7 +22,7 @@ fun String.replacePlaceholders(player: Player): String {
     }
 
     if (Dependency.PAPI.isIntegrationActive && PlaceholderAPI.containsPlaceholders(newMessage)) {
-        val logger = Bukkit.getPluginManager().getPlugin("CustomJoinMessages")?.logger ?: Bukkit.getLogger()
+        val logger = Bukkit.getPluginManager().getPlugin("JiuJiuhuanying")?.logger ?: Bukkit.getLogger()
         logger.severe("Placeholder expansion exceeded the maximum nesting depth of $MAX_PLACEHOLDER_NESTING for player '${player.name}'. The partially expanded message will be used: $newMessage")
     }
 

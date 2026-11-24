@@ -85,6 +85,7 @@ tasks {
     }
 
     shadowJar {
+        archiveFileName.set("JiuJiuhuanying.jar")
         archiveClassifier.set("")
         enableAutoRelocation = true
         relocationPrefix = "net.insprill.cjm.libs"
