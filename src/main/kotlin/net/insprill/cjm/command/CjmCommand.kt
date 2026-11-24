@@ -28,6 +28,13 @@ import org.bukkit.entity.Player
 @Suppress("UNUSED")
 class CjmCommand(private val manager: BukkitCommandManager, private val plugin: CustomJoinMessages) : BaseCommand() {
 
+    @Subcommand("welcome")
+    @CommandPermission("jiujiuhuanying.welcome")
+    @Description("点击新人进服提示领取欢迎奖励。")
+    fun welcome(player: Player, token: String) {
+        plugin.welcomeRewards?.claim(player, token)
+    }
+
     fun updateLocale() {
         val requestedLang = plugin.config.getOrDefault("language", "en")?.lowercase()
         if (manager.supportedLanguages.none { it.language.equals(requestedLang) }) {

@@ -2,11 +2,13 @@
 
 由 [Insprill/custom-join-messages](https://github.com/Insprill/custom-join-messages) Fork 的啾啾进退服消息插件，保留原作者署名与 GPL-3.0 许可证。
 
-2026-11-24：插件注册名、工程名和成品文件名改为 `JiuJiuhuanying` / `JiuJiuhuanying.jar`；保留原包名、主类、`cjm.*` 权限和旧命令，新增 `/jiujiuhuanying` 别名。内部版本为 `17.12.0-jiujiu.1`，默认附上游构建提交信息。
+2026-11-24：插件注册名、工程名和成品文件名为 `JiuJiuhuanying` / `JiuJiuhuanying.jar`；保留原包名、主类、`cjm.*` 权限和旧命令，新增 `/jiujiuhuanying` 别名。内部版本为 `17.12.0-jiujiu.2`，默认附上游构建提交信息。
+
+新玩家首次进服后，其他已登录玩家可在60秒内点击欢迎按钮获得100 J点，每人每位新人仅一次，不能欢迎自己。每日默认10次上限，可在 `welcome-rewards.yml` 配置。仅真实首次进服/通过AuthMe登录开放，不从隐身假进服触发。需要 JiuJiuLib 2.3.0以上与有效的j货币提供者。持久记录 `data/welcome-rewards.journal` 在付款前写入意图，失败或不确定结果保留待核对记录，禁止自动重试；停服/重载后不恢复旧按钮有效期，不自动补发。
 
 本工程是上游完整源码的改名分支，不含历史 `17.12.0-jiujiu-svfix1` 的定制 SuperVanish 补丁，不使用 ASM 或二进制补丁构建。未完成 Shiroha/Folia 26.2 实服兼容验证，不应直接替换现有正式服。
 
-构建沿用原 Gradle Wrapper，要求 JDK 25：Windows 使用 `gradlew.bat build`，其他系统使用 `./gradlew build`。上游当前编译 API 指向 26.3；本次只改名，未将其声明为已适配 26.2。输出为 `build/libs/JiuJiuhuanying.jar`。首次安装后的数据目录为 `plugins/JiuJiuhuanying`，不会自动迁移 `plugins/CustomJoinMessages`；不要同时加载两份插件。
+构建沿用 Gradle Wrapper（9.8.2），要求 JDK 25：Windows 使用 `gradlew.bat build`，其他系统使用 `./gradlew build`。本分支编译API为 `io.papermc.paper:paper-api:26.2.build.+`，实际构建解析版本需以记录为准；API编译通过不等于Shiroha实服验收。输出为 `build/libs/JiuJiuhuanying.jar`。`dependencies/JiuJiuLib.jar` 仅作编译输入，不是本项目安装成品，不会打入插件JAR。首次安装后的数据目录为 `plugins/JiuJiuhuanying`，不会自动迁移 `plugins/CustomJoinMessages`；不要同时加载两份插件。
 
 以下为保留的上游说明，其中下载、统计及发布平台链接指向原作者项目；Fork 的自动第三方发布已限制到上游仓库。
 

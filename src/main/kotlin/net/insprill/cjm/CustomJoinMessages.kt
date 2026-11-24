@@ -47,6 +47,14 @@ import kotlin.io.path.exists
 
 open class CustomJoinMessages : JavaPlugin() {
 
+    var welcomeRewards: net.insprill.cjm.welcome.WelcomeRewards? = null
+        private set
+
+    override fun onDisable() {
+        welcomeRewards?.close()
+        welcomeRewards = null
+    }
+
     lateinit var messageSender: MessageSender
     lateinit var hookManager: HookManager
     lateinit var toggleHandler: ToggleHandler
@@ -119,6 +127,8 @@ open class CustomJoinMessages : JavaPlugin() {
         }
 
         registerCommands()
+
+        welcomeRewards = net.insprill.cjm.welcome.WelcomeRewards(this)
 
         initMetrics(messageTypes)
 

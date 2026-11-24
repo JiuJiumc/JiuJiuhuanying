@@ -8,6 +8,7 @@ description: The most advanced custom join messages plugin on the market.
 website: https://github.com/JiuJiumc/JiuJiuhuanying
 
 softdepend:
+  - JiuJiuLib
   - AdvancedVanish
   - AuthMe
   - CMI
@@ -21,5 +22,8 @@ softdepend:
   - VelocityVanish
 
 permissions:
+  jiujiuhuanying.welcome:
+    description: 点击新人欢迎提示获得欢迎奖励
+    default: true
   cjm.default:
     default: true
