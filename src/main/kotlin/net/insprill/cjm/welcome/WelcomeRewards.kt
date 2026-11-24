@@ -20,7 +20,9 @@ import java.util.concurrent.TimeUnit
 
 /** All ledger IO/settlement runs on one bounded worker; Bukkit work returns to each entity. */
 class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
-    private data class Window(val target: UUID, val name: String, val deadline: Long)
+    private data class Window(val target: UUID, val name: String, val deadline: Long,
+                              val test: Boolean = false, val paid: Boolean = true, val receipt: UUID = target,
+                              val previewClaims: MutableSet<UUID> = ConcurrentHashMap.newKeySet())
     private val windows = ConcurrentHashMap<UUID, Window>()
     private val inFlight = ConcurrentHashMap.newKeySet<String>()
     private val worker = ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, ArrayBlockingQueue(128),
@@ -38,6 +40,9 @@ class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
         val file = java.io.File(plugin.dataFolder, "welcome-rewards.yml")
         if (!file.exists()) plugin.saveResource("welcome-rewards.yml", false)
         config = YamlConfiguration.loadConfiguration(file)
+        plugin.getResource("welcome-rewards.yml")!!.reader(Charsets.UTF_8).use {
+            config.setDefaults(YamlConfiguration.loadConfiguration(it))
+        }
         amount = config.getDouble("reward.amount", 100.0)
         seconds = config.getInt("window-seconds", 60)
         dailyLimit = config.getInt("reward.daily-limit", 10)
@@ -54,6 +59,44 @@ class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
         }, 20L, 20L).also { cleanup = it }
     }
 
+    fun test(sender: org.bukkit.command.CommandSender, player: Player, paid: Boolean) {
+        if (closed || failed) { sender.sendMessage(text("unavailable")); return }
+        sender.sendMessage(text("test-start", player.name))
+        CrossPlatformScheduler.runAtEntity(plugin, player, Runnable {
+            if (!player.isOnline || !plugin.hookManager.isLoggedIn(player) || plugin.hookManager.isVanished(player)) return@Runnable
+            val target = player.uniqueId
+            val name = player.name
+            submit {
+                try {
+                    if (closed || failed) return@submit
+                    if (windows.values.any { it.test && it.deadline > System.nanoTime() }) return@submit
+                    val token = UUID.randomUUID()
+                    if (paid && ledger?.open(token) != true) return@submit
+                    val window = Window(target, name, System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds.toLong()), true, paid, token)
+                    windows[token] = window
+                    plugin.logger.info("欢迎测试：target=$target paid=$paid receipt=$token；真实首次进服记录未修改")
+                    broadcast(token, window)
+                } catch (error: Exception) { stopRewards(error) }
+            }
+        })
+    }
+
+    private fun broadcast(token: UUID, window: Window) {
+        CrossPlatformScheduler.runDelayed(plugin, Runnable {
+            Bukkit.getOnlinePlayers().forEach { recipient ->
+                CrossPlatformScheduler.runAtEntity(plugin, recipient, Runnable {
+                    if (!recipient.isOnline || recipient.uniqueId == window.target || windows[token] != window) return@Runnable
+                    if (!recipient.hasPermission("jiujiuhuanying.welcome") || !plugin.hookManager.isLoggedIn(recipient)) return@Runnable
+                    if (window.test && !recipient.hasPermission("jiujiuhuanying.test")) return@Runnable
+                    val key = if (!window.test) "invite" else if (window.paid) "test-paid-invite" else "test-invite"
+                    val parts = TextComponent.fromLegacyText(text(key, window.name))
+                    parts.forEach { it.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cjm welcome $token") }
+                    recipient.spigot().sendMessage(*parts)
+                })
+            }
+        }, 1L)
+    }
+
     /** Only real, authenticated first joins call this; fake vanish joins never create rewards. */
     fun joined(player: Player) {
         if (closed || failed || !config.getBoolean("enabled", true) || player.hasPlayedBefore()) return
@@ -67,45 +110,41 @@ class WelcomeRewards(private val plugin: CustomJoinMessages) : AutoCloseable {
                 val token = UUID.randomUUID()
                 val window = Window(target, name, System.nanoTime() + TimeUnit.SECONDS.toNanos(seconds.toLong()))
                 windows[token] = window
-                CrossPlatformScheduler.runDelayed(plugin, Runnable {
-                    Bukkit.getOnlinePlayers().forEach { recipient ->
-                        CrossPlatformScheduler.runAtEntity(plugin, recipient, Runnable {
-                            if (!recipient.isOnline || recipient.uniqueId == target || windows[token] != window) return@Runnable
-                            if (!recipient.hasPermission("jiujiuhuanying.welcome") || !plugin.hookManager.isLoggedIn(recipient)) return@Runnable
-                            val parts = TextComponent.fromLegacyText(text("invite", name))
-                            parts.forEach { it.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/cjm welcome $token") }
-                            recipient.spigot().sendMessage(*parts)
-                        })
-                    }
-                }, 1L)
+                broadcast(token, window)
             } catch (error: Exception) { stopRewards(error) }
         }
     }
     fun claim(player: Player, tokenText: String) {
         if (closed || failed || !config.getBoolean("enabled", true)) { player.sendMessage(text("unavailable")); return }
-        if (!Bukkit.getPluginManager().isPluginEnabled("JiuJiuLib")) { player.sendMessage(text("unavailable")); return }
         if (!player.hasPermission("jiujiuhuanying.welcome") || !plugin.hookManager.isLoggedIn(player)) return
         val token = runCatching { UUID.fromString(tokenText) }.getOrNull()
         val window = token?.let { windows[it] }
         if (window == null || window.deadline <= System.nanoTime()) { player.sendMessage(text("expired")); return }
+        if (window.test && !player.hasPermission("jiujiuhuanying.test")) return
+        if (window.paid && !Bukkit.getPluginManager().isPluginEnabled("JiuJiuLib")) { player.sendMessage(text("unavailable")); return }
         val who = player.uniqueId
         val welcomerName = player.name
         if (who == window.target) { player.sendMessage(text("self")); return }
-        val claimKey = "${window.target}|$who"
+        val claimKey = "${window.receipt}|$who"
         if (!inFlight.add(claimKey)) { player.sendMessage(text("busy")); return }
         val accepted = submit(player) {
             try {
                 if (closed || failed || window.deadline <= System.nanoTime()) { tell(who, "expired"); return@submit }
+                if (!window.paid) {
+                    if (window.previewClaims.add(who)) { tell(who, "test-success", window.name); tell(window.target, "test-welcomed", welcomerName) }
+                    else tell(who, "already-or-limit")
+                    return@submit
+                }
                 val bank = CurrencyService.forPlugin(plugin)
                 if (!bank.available("j")) { tell(who, "unavailable"); return@submit }
-                if (ledger?.reserve(window.target, who, LocalDate.now(zone), dailyLimit, amount) != true) {
+                if (ledger?.reserve(window.receipt, who, LocalDate.now(zone), dailyLimit, amount) != true) {
                     tell(who, "already-or-limit"); return@submit
                 }
                 // Intent is durable before calling the provider. Never retry failure/timeout/exception.
                 var success = false
                 try { if (!closed) success = bank.depositAndGetBalance(who, "j", amount).isSuccess }
                 catch (error: Exception) { plugin.logger.severe("欢迎奖励需人工核对：new=${window.target}, who=$who, ${error.message}") }
-                ledger!!.finish(window.target, who, success)
+                ledger!!.finish(window.receipt, who, success)
                 if (!success) plugin.logger.severe("欢迎奖励未确认到账，禁止自动补发：new=${window.target}, who=$who")
                 tell(who, if (success) "success" else "review", window.name)
                 if (success) tell(window.target, "welcomed", welcomerName)

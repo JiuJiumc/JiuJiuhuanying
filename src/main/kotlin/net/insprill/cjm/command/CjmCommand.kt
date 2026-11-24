@@ -28,6 +28,17 @@ import org.bukkit.entity.Player
 @Suppress("UNUSED")
 class CjmCommand(private val manager: BukkitCommandManager, private val plugin: CustomJoinMessages) : BaseCommand() {
 
+    @Subcommand("testwelcome")
+    @CommandPermission("jiujiuhuanying.test")
+    @CommandCompletion("@players preview|paid")
+    @Syntax("<在线玩家> [preview|paid]")
+    @Description("模拟新人欢迎；preview不发钱，paid真实发奖。")
+    fun testWelcome(sender: CommandSender, target: OnlinePlayer, @Optional mode: String?) {
+        val selected = mode?.lowercase() ?: "preview"
+        if (selected != "preview" && selected != "paid") throw InvalidCommandArgument("用法：/cjm testwelcome <在线玩家> [preview|paid]")
+        plugin.welcomeRewards?.test(sender, target.player, selected == "paid")
+    }
+
     @Subcommand("welcome")
     @CommandPermission("jiujiuhuanying.welcome")
     @Description("点击新人进服提示领取欢迎奖励。")

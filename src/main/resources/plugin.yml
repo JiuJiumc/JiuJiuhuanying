@@ -22,6 +22,9 @@ softdepend:
   - VelocityVanish
 
 permissions:
+  jiujiuhuanying.test:
+    description: 模拟新人欢迎与真实奖励测试；测试按钮仅管理员可见和领取
+    default: op
   jiujiuhuanying.welcome:
     description: 点击新人欢迎提示获得欢迎奖励
     default: true

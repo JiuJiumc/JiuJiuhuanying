@@ -13,6 +13,12 @@ reward:
 # 使用&颜色码；可用变量：{player}新人名、{amount}金额、{seconds}有效秒数、{limit}每日上限。
 # 整条invite提示可点击，运行/cjm welcome 随机令牌；不要手填新人UUID冒充令牌。
 messages:
+  # 测试按钮仅有jiujiuhuanying.test权限的人可见，目标玩家仍不能自领。
+  test-start: '&f[&4!&f] &e已请求为{player}开启欢迎测试；需目标在线、已登录且未隐身，同一时间仅开放一轮。'
+  test-invite: '&f[&4!&f] &e[测试·不发钱] &f{player} &a[点击模拟欢迎] &7（{seconds}秒）'
+  test-paid-invite: '&f[&4!&f] &e[测试·真实发钱] &f{player} &a[点击欢迎，领取{amount} J点] &7（{seconds}秒）'
+  test-success: '&f[&4!&f] &a欢迎{player}测试成功；本次没有发钱，也不占每日次数。'
+  test-welcomed: '&f[&4!&f] &e[测试] &b{player} &a欢迎了你，真实进服记录未修改。'
   invite: '&f[&4!&f] &b欢迎新人 &f{player} &b加入！ &a[点击欢迎，领取 {amount} J点] &7（{seconds}秒内）'
   success: '&f[&4!&f] &a你欢迎了 &f{player}&a，已获得 &e{amount} J点&a！'
   # 此条发给新人，{player}在此表示欢迎者的名字。
