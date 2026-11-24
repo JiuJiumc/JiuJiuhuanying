@@ -1,6 +1,10 @@
+## svfix4 顶部人数与私信欢迎
+
+顶部BossBar按每次成功欢迎累计人数，成功消息只私信目标新人；点击者奖励与私信反馈保留。bossbar配置标题、颜色、样式、范围、显示时长、轮播间隔、进度；notifications控制双方私信，chat-invite控制聊天点击入口。所有文案在welcome-rewards.yml，改后重启；原config.yml和messages不覆盖。测试预览计数但不发钱，真实付款失败/重复不计数；关服/退出/过期清理欢迎条。
+
 # CustomJoinMessages 啾啾欢迎奖励
 
-版本：17.12.0-jiujiu-svfix3；目标API Paper26.2，JDK25，Gradle9.8.2。
+版本：17.12.0-jiujiu-svfix4；目标API Paper26.2，JDK25，Gradle9.8.2。
 
 本工程以原作者v17.12.0完整源码为主体，保留旧正式服svfix1的SuperVanishVanishHook.java适配源码（逐字节复用），加入首登点击欢迎奖励100 J点及管理员测试功能。不是旧补丁工程原封不动重编；不使用JarRepair、ASM、字节码补丁或反编译代码。调度、奖励及构建适配按当前Folia与共享货币接口维护。保留原作者署名和GPL许可证。
 
@@ -8,7 +12,7 @@
 
 /cjm testwelcome 在线玩家 preview：仅管理员预览，不发钱；paid模式真实发奖，不限每日次数，需另一名管理员点击。测试资格独立，不改真实首登记录。
 
-配置以用户132321.zip为结构和开关基线，将玩家消息翻译中文；data/toggles.json及worlds.json不打入覆盖包，保留服务器现有数据。language:en管理命令语言保留。welcome-rewards.yml未知服务器自定义不覆盖，缺少时从JAR生成，已有时缺少消息使用默认值。
+本次不覆盖原config.yml和messages目录，原进退服文案继续保留。welcome-rewards.yml缺少时生成，已有时只补齐缺少的新配置键，保留已有奖励金额、文案和其他设置；新增字段使用&颜色码，不受原主配置MINIMESSAGE格式影响。
 
 编译：gradlew.bat build -Pversion.metadata=false，首次需联网下载依赖。dependencies/JiuJiuLib.jar和SuperVanish-api-reference.jar是仅供编译的真实接口参考，不是本插件成品，不打入成品，也不要安装替换服务器依赖。隐身适配仅针对用户dev.philippcmd SuperVanish系列，不改隐身插件。
 

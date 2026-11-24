@@ -5,6 +5,30 @@ enabled: true
 window-seconds: 60
 # 领奖日志日期使用此时区，不限制每日次数。
 timezone: Asia/Shanghai
+# 聊天仅发送一条可点击入口；BossBar本身不能点击。关闭入口后需使用已有按钮令牌指令参与。
+chat-invite:
+  enabled: true
+# 成功反馈均为私信，不会公开广播；可分别关闭，文案在下方messages配置。
+notifications:
+  sender-enabled: true
+  newcomer-enabled: true
+# 顶部欢迎人数条；每人最多显示一条，多位新人按配置轮播。
+bossbar:
+  enabled: true
+  # 支持&颜色码；{player}新人名、{count}成功欢迎人数、{seconds}剩余显示秒数、{test}测试标记。
+  title: '&b欢迎 {player} 加入啾啾服务器 &f| &e已有 {count} 人欢迎'
+  # PINK、BLUE、RED、GREEN、YELLOW、PURPLE、WHITE。
+  color: PURPLE
+  # PROGRESS连续条；NOTCHED_6、NOTCHED_10、NOTCHED_12、NOTCHED_20分段条。
+  style: PROGRESS
+  # ALL所有已登录玩家；NEWCOMER仅新人。测试条仅管理员可见。
+  audience: ALL
+  # 显示5～600秒，从欢迎开始计时；与上方可点击窗口分别设置。
+  duration-seconds: 60
+  # 多位新人轮播间隔1～60秒；同一玩家不会同时堆叠多条欢迎条。
+  rotate-seconds: 5
+  # 填充比例0～1，固定显示，不影响真实欢迎人数。
+  progress: 1.0
 reward:
   # 每名欢迎者每位新人只领一次；J点通过JiuJiuLib的j货币接口发放。
   amount: 100
@@ -21,7 +45,7 @@ messages:
   invite: '&f[&4!&f] &b欢迎新人 &f{player} &b加入！ &a[点击欢迎，领取 {amount} J点] &7（{seconds}秒内）'
   success: '&f[&4!&f] &a你欢迎了 &f{player}&a，已获得 &e{amount} J点&a！'
   # 此条发给新人，{player}在此表示欢迎者的名字。
-  welcomed: '&f[&4!&f] &b{player} &a欢迎你加入，祝你玩得开心！'
+  welcomed: '&f[&4!&f] &b{player} &a欢迎你加入啾啾服务器，祝你玩得开心！'
   expired: '&f[&4!&f] &7这次欢迎已结束。'
   self: '&f[&4!&f] &e不能欢迎自己领取奖励。'
   already: '&f[&4!&f] &e你已欢迎过这位新人，不能重复领奖。'
