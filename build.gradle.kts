@@ -38,6 +38,8 @@ repositories {
 
 dependencies {
     compileOnly(files("dependencies/JiuJiuLib.jar"))
+    compileOnly(files("dependencies/SuperVanish-api-reference.jar"))
+    testImplementation(files("dependencies/SuperVanish-api-reference.jar"))
     testImplementation(files("dependencies/JiuJiuLib.jar"))
     // Plugins
     compileOnly(fileTree("libs")) // No Maven repos :/
