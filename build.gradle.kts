@@ -95,7 +95,7 @@ tasks {
     }
 
     shadowJar {
-        archiveFileName.set("JiuJiuhuanying.jar")
+        archiveFileName.set("CustomJoinMessages.jar")
         archiveClassifier.set("")
         enableAutoRelocation = true
         relocationPrefix = "net.insprill.cjm.libs"
@@ -105,6 +105,7 @@ tasks {
     }
 
     processResources {
+        inputs.property("pluginVersion", project.version)
         filteringCharset = Charsets.UTF_8.name()
         filesMatching("plugin.yml") {
             expand("version" to version)

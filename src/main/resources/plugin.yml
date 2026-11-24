@@ -1,4 +1,4 @@
-name: JiuJiuhuanying
+name: CustomJoinMessages
 version: ${version}
 main: net.insprill.cjm.CustomJoinMessages
 api-version: 1.13

@@ -1,19 +1,20 @@
-# JiuJiuhuanying
+# CustomJoinMessages 啾啾欢迎奖励
 
-由 [Insprill/custom-join-messages](https://github.com/Insprill/custom-join-messages) Fork 的啾啾进退服消息插件，保留原作者署名与 GPL-3.0 许可证。
+版本：17.12.0-jiujiu-svfix2；目标API Paper26.2，JDK25，Gradle9.8.2。
 
-2026-11-24：插件注册名、工程名和成品文件名为 `JiuJiuhuanying` / `JiuJiuhuanying.jar`；保留原包名、主类、`cjm.*` 权限和旧命令，新增 `/jiujiuhuanying` 别名。内部版本为 `17.12.0-jiujiu.4`，默认附上游构建提交信息。
+本工程以原作者v17.12.0完整源码为主体，保留旧正式服svfix1的SuperVanishVanishHook.java适配源码（逐字节复用），加入首登点击欢迎奖励100 J点及管理员测试功能。不是旧补丁工程原封不动重编；不使用JarRepair、ASM、字节码补丁或反编译代码。调度、奖励及构建适配按当前Folia与共享货币接口维护。保留原作者署名和GPL许可证。
 
-新玩家首次进服后，其他已登录玩家可在60秒内点击欢迎按钮获得100 J点，每人每位新人仅一次，不能欢迎自己。每日默认10次上限，可在 `welcome-rewards.yml` 配置。仅真实首次进服/通过AuthMe登录开放，不从隐身假进服触发。需要 JiuJiuLib 2.3.0以上与有效的j货币提供者。持久记录 `data/welcome-rewards.journal` 在付款前写入意图，失败或不确定结果保留待核对记录，禁止自动重试；停服/重载后不恢复旧按钮有效期，不自动补发。
+插件注册名及配置目录保持CustomJoinMessages，成品CustomJoinMessages.jar。旧命令/cjm、/customjoinmessages保留，/jiujiuhuanying仍作为别名。j货币通过JiuJiuLib，默认首次进服60秒内点击、每人每位新人一次、每日10次、不得自领。data/welcome-rewards.journal记录付款意图，未知结果不补发；原世界/玩家数据不清理。
 
-本工程是上游完整源码的改名分支，不含历史 `17.12.0-jiujiu-svfix1` 的定制 SuperVanish 补丁，不使用 ASM 或二进制补丁构建。未完成 Shiroha/Folia 26.2 实服兼容验证，不应直接替换现有正式服。
+/cjm testwelcome 在线玩家 preview：仅管理员预览，不发钱；paid模式真实发奖并占每日上限，需另一名管理员点击。测试资格独立，不改真实首登记录。
 
-构建沿用 Gradle Wrapper（9.8.2），要求 JDK 25：Windows 使用 `gradlew.bat build`，其他系统使用 `./gradlew build`。本分支编译API为 `io.papermc.paper:paper-api:26.2.build.+`，实际构建解析版本需以记录为准；API编译通过不等于Shiroha实服验收。输出为 `build/libs/JiuJiuhuanying.jar`。`dependencies/JiuJiuLib.jar` 仅作编译输入，不是本项目安装成品，不会打入插件JAR。首次安装后的数据目录为 `plugins/JiuJiuhuanying`，不会自动迁移 `plugins/CustomJoinMessages`；不要同时加载两份插件。
+配置以用户132321.zip为结构和开关基线，将玩家消息翻译中文；data/toggles.json及worlds.json不打入覆盖包，保留服务器现有数据。language:en管理命令语言保留。welcome-rewards.yml未知服务器自定义不覆盖，缺少时从JAR生成，已有时缺少消息使用默认值。
 
-以下为保留的上游说明，其中下载、统计及发布平台链接指向原作者项目；Fork 的自动第三方发布已限制到上游仓库。
+编译：gradlew.bat build -Pversion.metadata=false，首次需联网下载依赖。dependencies/JiuJiuLib.jar和SuperVanish-api-reference.jar是仅供编译的真实接口参考，不是本插件成品，不打入成品，也不要安装替换服务器依赖。隐身适配仅针对用户dev.philippcmd SuperVanish系列，不改隐身插件。
+
+本地构建及测试不等于实服兼容验收。原PlayerTeleportEvent世界公告在folia-plugin-dev中被列为不可用，本配置保持关闭。日志实际Shiroha26.2/f44c27e和SuperVanish stealth4需实际验收。
 
 ---
-
 [![Spigot Downloads][spigot-downloads-shield]][spigot-url]
 [![bStats Servers][bstats-servers-shield]][bstats-url]
 [![Spigot Rating][spigot-rating-shield]][spigot-url]
@@ -105,7 +106,7 @@
 * 🥷 Vanish Integration
     * Send messages when vanishing/unvanishing
     * Supports most vanish plugins
-  
+
 * 🎚️ Fine-grained Message Toggling Per-Player
     * Allow your players to personalize which messages they receive
 
@@ -142,8 +143,8 @@ Unsure how something works? All documentation can be found on the [wiki][wiki-ur
 <!-- BUILDING -->
 ## Building
 
-To compile Custom Join Messages, you will need an internet connection and a terminal.  
-Clone this repo, then run `./gradlew build`.  
+To compile Custom Join Messages, you will need an internet connection and a terminal.
+Clone this repo, then run `./gradlew build`.
 You can find the compiled jar in the `build/libs` directory.
 
 
@@ -152,8 +153,8 @@ You can find the compiled jar in the `build/libs` directory.
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create.  
-Any contributions you make are **greatly appreciated**!  
+Contributions are what make the open source community such an amazing place to learn, inspire, and create.
+Any contributions you make are **greatly appreciated**!
 If you're new to contributing to open-source projects, you can follow [this](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) guide.
 
 
@@ -172,7 +173,7 @@ an open-source service that collects anonymous data for Minecraft software. You 
 <!-- LICENSE -->
 ## License
 
-Distributed under the GNU General Public License v3.0.  
+Distributed under the GNU General Public License v3.0.
 See [LICENSE][license-url] for more information.
 
 
