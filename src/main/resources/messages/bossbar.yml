@@ -1,3 +1,4 @@
+# 基于用户132321.zip配置恢复：中文消息，保留原开关和参数。
 # Toggles whether bossbar messages should be sent.
 Enabled: false
 
@@ -9,7 +10,7 @@ Public:
       Max-Players: -1
       Messages:
         1:
-          Message: "&a%name% &7has joined the server for the first time!"
+          Message: "&f[&4!&f] &a欢迎 &f%name% &a首次加入服务器！"
           Bar-Color: GREEN
           Bar-Style: SOLID
           Show-Time: 60
@@ -19,7 +20,7 @@ Public:
       Permission: cjm.default
       Messages:
         1:
-          Message: "&a%name% &7has joined!"
+          Message: "&f[&4!&f] &a%name% &7加入了服务器。"
           Bar-Color: GREEN
           Bar-Style: SOLID
           Show-Time: 60
@@ -29,7 +30,7 @@ Public:
       Permission: cjm.default
       Messages:
         1:
-          Message: "&a%name% &7has left!"
+          Message: "&f[&4!&f] &e%name% &7离开了服务器。"
           Bar-Color: RED
           Bar-Style: SOLID
           Show-Time: 60
@@ -41,7 +42,7 @@ Private:
       Permission: cjm.default
       Messages:
         1:
-          Message: "&7Welcome to our server!"
+          Message: "&f[&4!&f] &a欢迎来到服务器，祝你玩得开心！"
           Bar-Color: GREEN
           Bar-Style: SOLID
           Show-Time: 60
@@ -51,7 +52,7 @@ Private:
       Permission: cjm.default
       Messages:
         1:
-          Message: "&7Welcome back!"
+          Message: "&f[&4!&f] &a欢迎回来！"
           Bar-Color: GREEN
           Bar-Style: SOLID
           Show-Time: 60

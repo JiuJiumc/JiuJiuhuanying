@@ -1,3 +1,24 @@
+## svfix4 顶部人数与私信欢迎
+
+顶部BossBar按每次成功欢迎累计人数，成功消息只私信目标新人；点击者奖励与私信反馈保留。bossbar配置标题、颜色、样式、范围、显示时长、轮播间隔、进度；notifications控制双方私信，chat-invite控制聊天点击入口。所有文案在welcome-rewards.yml，改后重启；原config.yml和messages不覆盖。测试预览计数但不发钱，真实付款失败/重复不计数；关服/退出/过期清理欢迎条。
+
+# CustomJoinMessages 啾啾欢迎奖励
+
+版本：17.12.0-jiujiu-svfix4；目标API Paper26.2，JDK25，Gradle9.8.2。
+
+本工程以原作者v17.12.0完整源码为主体，保留旧正式服svfix1的SuperVanishVanishHook.java适配源码（逐字节复用），加入首登点击欢迎奖励100 J点及管理员测试功能。不是旧补丁工程原封不动重编；不使用JarRepair、ASM、字节码补丁或反编译代码。调度、奖励及构建适配按当前Folia与共享货币接口维护。保留原作者署名和GPL许可证。
+
+插件注册名及配置目录保持CustomJoinMessages，成品CustomJoinMessages.jar。旧命令/cjm、/customjoinmessages保留，/jiujiuhuanying仍作为别名。j货币通过JiuJiuLib，默认首次进服60秒内点击、每人每位新人一次、每日不限次数、不得自领。data/welcome-rewards.journal记录付款意图，未知结果不补发；原世界/玩家数据不清理。
+
+/cjm testwelcome 在线玩家 preview：仅管理员预览，不发钱；paid模式真实发奖，不限每日次数，需另一名管理员点击。测试资格独立，不改真实首登记录。
+
+本次不覆盖原config.yml和messages目录，原进退服文案继续保留。welcome-rewards.yml缺少时生成，已有时只补齐缺少的新配置键，保留已有奖励金额、文案和其他设置；新增字段使用&颜色码，不受原主配置MINIMESSAGE格式影响。
+
+编译：gradlew.bat build -Pversion.metadata=false，首次需联网下载依赖。dependencies/JiuJiuLib.jar和SuperVanish-api-reference.jar是仅供编译的真实接口参考，不是本插件成品，不打入成品，也不要安装替换服务器依赖。隐身适配仅针对用户dev.philippcmd SuperVanish系列，不改隐身插件。
+
+本地构建及测试不等于实服兼容验收。原PlayerTeleportEvent世界公告在folia-plugin-dev中被列为不可用，本配置保持关闭。日志实际Shiroha26.2/f44c27e和SuperVanish stealth4需实际验收。
+
+---
 [![Spigot Downloads][spigot-downloads-shield]][spigot-url]
 [![bStats Servers][bstats-servers-shield]][bstats-url]
 [![Spigot Rating][spigot-rating-shield]][spigot-url]
@@ -89,7 +110,7 @@
 * 🥷 Vanish Integration
     * Send messages when vanishing/unvanishing
     * Supports most vanish plugins
-  
+
 * 🎚️ Fine-grained Message Toggling Per-Player
     * Allow your players to personalize which messages they receive
 
@@ -126,8 +147,8 @@ Unsure how something works? All documentation can be found on the [wiki][wiki-ur
 <!-- BUILDING -->
 ## Building
 
-To compile Custom Join Messages, you will need an internet connection and a terminal.  
-Clone this repo, then run `./gradlew build`.  
+To compile Custom Join Messages, you will need an internet connection and a terminal.
+Clone this repo, then run `./gradlew build`.
 You can find the compiled jar in the `build/libs` directory.
 
 
@@ -136,8 +157,8 @@ You can find the compiled jar in the `build/libs` directory.
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create.  
-Any contributions you make are **greatly appreciated**!  
+Contributions are what make the open source community such an amazing place to learn, inspire, and create.
+Any contributions you make are **greatly appreciated**!
 If you're new to contributing to open-source projects, you can follow [this](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) guide.
 
 
@@ -156,7 +177,7 @@ an open-source service that collects anonymous data for Minecraft software. You 
 <!-- LICENSE -->
 ## License
 
-Distributed under the GNU General Public License v3.0.  
+Distributed under the GNU General Public License v3.0.
 See [LICENSE][license-url] for more information.
 
 
@@ -202,3 +223,8 @@ Still need personalized support? Subscribe to my [Patreon][patreon-url] and join
 [minedown-url]: https://github.com/Phoenix616/MineDown#syntax
 [minimessage-url]: https://docs.advntr.dev/minimessage/index.html
 [legacy-color-codes-url]: https://minecraft.wiki/w/Formatting_codes#Color_codes
+
+管理员测试：`/cjm testwelcome <在线玩家> [preview|paid]`，默认preview不发钱；paid真实发奖，不限每日次数。测试目标必须在线、已登录且未隐身。测试按钮只向具有 `jiujiuhuanying.test` 权限的其他管理员显示，目标不能自领，每轮一次；同一时间只开放一轮测试，60秒后可再次开。每轮使用独立随机记录，不重置真实进服/领奖记录。旧奖励配置保留，新提示缺项从内置默认值补齐，不覆盖原文件。MCSM控制台命令不加前导斜线。
+
+
+2026-11-24 隐身兼容恢复：识别SuperVanish的实际main为dev.philippcmd.supervanish.Main时，使用其公开getVanishManager().isVanished及VanishStateChangeEvent，不调用de.myzelyam接口。官方SuperVanish仍沿用官方挂钩。dependencies/SuperVanish-api-reference.jar仅作编译参考，不打入成品，不要求替换服务器隐身插件。服务器日志所示stealth4尚需实际验收，编译接口核对使用本地stealth3及D:/Github内同系列源码。

@@ -1,5 +1,4 @@
-##########################################
-#                                        #
+# 基于用户132321.zip配置恢复：中文消息，保留原开关和参数。
 #          Custom Join Messages          #
 #              by Insprill               #
 #                                        #
@@ -12,26 +11,18 @@ language: en
 # Settings for hooks into other plugins. These settings only apply after a restart.
 Addons:
   # Settings for Auth plugins like AuthMe.
-  Auth:
-    # Whether we should wait for the auth plugin to authenticate
-    # the player before sending any join or quit messages.
-    Wait-For-Login: true
-
+   Auth:
+      Wait-For-Login: true
 
   # Settings for Vanish plugin hooks.
-  Vanish:
-    # Settings for sending custom vanish/ unvanish messages. If you enable
-    # this, disable fake messages in Super/PremiumVanishes config.
-    Fake-Messages:
-      # Whether we should use our own messages.
-      Enabled: true
-      # Whether to send private messages when vanishing/unvanishing.
-      Private-Messages: false
+   Vanish:
+      Fake-Messages:
+         Enabled: true
+         Private-Messages: false
 
   # Settings for Jail plugins
-  Jail:
-    # If false, no messages will be sent for players who are in Jail.
-    Ignore-Jailed-Players: false
+   Jail:
+      Ignore-Jailed-Players: false
 
 # Settings for formatting text.
 formatting:
@@ -41,21 +32,22 @@ formatting:
   # - LEGACY
   # For more information on formatting and what each option does, check out the wiki (https://cjm.insprill.net/en/latest/writing-messages/formatting.html).
   # This value is CaSe-SeNsItIvE! Ensure it's typed exactly the same as the example.
-  formatter: LEGACY
+   formatter: LEGACY
 
 # If true, messages will be sent when players change worlds instead
 # of only when they join the server. This also only sends messages to players who are in the same world.
 # The Overworld, Nether, and End all count as the same world.
 World-Based-Messages:
-  Enabled: false
+  # Whether the update checker is enabled.
+   Enabled: false
   # Messages will only be sent when moving between worlds in different groups.
   # Those groups can be defined here.
   # The keys don't matter as long as there's no duplicates.
   # Note that groups are saved by key name, so while what it is doesn't matter,
   # it cannot be changed without losing its reference.
   # All world names are cAsE-SeNsItIvE.
-  Groups:
-    1:
+   Groups:
+      1:
       - world
       - world_nether
       - world_the_end
@@ -64,24 +56,21 @@ World-Based-Messages:
   #  NONE - Worlds will not send messages when entering/exiting.
   #  SAME - Worlds will be treated as if they're in one group.
   #  INDIVIDUAL - Worlds will be treated as if they're all in their own groups.
-  Ungrouped-Mode: INDIVIDUAL
+   Ungrouped-Mode: INDIVIDUAL
 
 # Settings for the plugins update checker.
 Update-Checker:
-  # Whether the update checker is enabled.
-  Enabled: true
+   Enabled: true
   # The date format used when displaying the release date of a new version.
-  Date-Format: "MM-dd-yyyy HH:mm"
+   Date-Format: MM-dd-yyyy HH:mm
   # Whether to notify when a new beta version is available.
   # These versions may be less stable, and are not recommended for a production environment.
   # Testing these versions is greatly appreciated, so if able, please try them out and report any issues.
-  Beta-Versions: false
+   Beta-Versions: false
   # Settings for notifications when an update is found.
-  Notifications:
-    # Whether operators should get notified in-game when an update is available.
-    In-Game: true
-    # Whether a console message should be printed when an update is available.
-    Console: true
+   Notifications:
+      In-Game: true
+      Console: true
 
 # DO NOT TOUCH!!!
-version: "3.0.0"
+version: 3.0.0

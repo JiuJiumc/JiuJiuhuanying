@@ -14,10 +14,10 @@ import org.bukkit.event.player.PlayerQuitEvent
 
 class AuthMeAuthHook(private val plugin: CustomJoinMessages) : AuthHook {
 
-    private val loggedInPlayers = HashSet<Player>()
+    private val loggedInPlayers = java.util.concurrent.ConcurrentHashMap.newKeySet<java.util.UUID>()
 
     override fun isLoggedIn(player: Player): Boolean {
-        return loggedInPlayers.contains(player)
+        return loggedInPlayers.contains(player.uniqueId)
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -34,14 +34,16 @@ class AuthMeAuthHook(private val plugin: CustomJoinMessages) : AuthHook {
     }
 
     private fun handleJoin(player: Player) {
-        loggedInPlayers.add(player)
+        loggedInPlayers.add(player.uniqueId)
         val action = if (player.hasPlayedBefore()) MessageAction.JOIN else MessageAction.FIRST_JOIN
         plugin.messageSender.trySendMessages(player, action, true)
+        plugin.welcomeRewards?.joined(player)
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onQuit(e: PlayerQuitEvent) {
-        CrossPlatformScheduler.runDelayed(plugin, { loggedInPlayers.remove(e.player) }, 1L)
+        val id = e.player.uniqueId
+        CrossPlatformScheduler.runDelayed(plugin, { loggedInPlayers.remove(id) }, 1L)
     }
 
 }

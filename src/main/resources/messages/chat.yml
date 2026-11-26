@@ -1,3 +1,4 @@
+# 基于用户132321.zip配置恢复：中文消息，保留原开关和参数。
 # Toggles whether chat messages should be sent.
 Enabled: true
 
@@ -11,19 +12,19 @@ Public:
       Max-Players: -1
       Messages:
         1:
-          - "&a%name% &7has joined the server for the first time! &8(&a#%uniquejoins%&8)"
+          - "&f[&4!&f] &a欢迎 &f%name% &a首次加入服务器！ &8(&a#%uniquejoins%&8)"
   Join:
     1:
       Permission: cjm.default
       Messages:
         1:
-          - "&a%name% &7has joined!"
+          - "&f[&4!&f] &a%name% &7加入了服务器。"
   Quit:
     1:
       Permission: cjm.default
       Messages:
         1:
-          - "&a%name% &7has left!"
+          - "&f[&4!&f] &e%name% &7离开了服务器。"
 
 Private:
   First-Join:
@@ -31,10 +32,10 @@ Private:
       Permission: cjm.default
       Messages:
         1:
-          - "&7Welcome to our server!"
+          - "&f[&4!&f] &a欢迎来到服务器，祝你玩得开心！"
   Join:
     1:
       Permission: cjm.default
       Messages:
         1:
-          - "&7Welcome back!"
+          - "&f[&4!&f] &a欢迎回来！"

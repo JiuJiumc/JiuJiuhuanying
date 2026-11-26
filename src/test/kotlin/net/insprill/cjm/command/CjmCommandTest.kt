@@ -154,7 +154,7 @@ class CjmCommandTest {
 
         player.performCommand("cjm preview ${player.name} chat public join 1")
 
-        assertTrue(player.nextMessage()!!.contains("joined", true))
+        assertTrue(player.nextMessage()!!.contains("加入了服务器"))
         assertNull(player.nextMessage())
     }
 
