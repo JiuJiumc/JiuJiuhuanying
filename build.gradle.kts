@@ -25,12 +25,22 @@ repositories {
     maven("https://repo.codemc.org/repository/maven-public/") // AuthMe
     maven("https://repo.essentialsx.net/releases/") // EssentialsX
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") // PlaceholderAPI
-    maven("https://repo.minebench.de/") // MineDown
+    exclusiveContent {
+        forRepository { maven("https://repo.minebench.de/") }
+        filter { includeGroup("de.themoep") }
+    }
     maven("https://repo.papermc.io/repository/maven-public/") // MockBukkit
-    maven("https://repo.sayandev.org/snapshots") // SayanVanish
+    exclusiveContent {
+        forRepository { maven("https://repo.sayandev.org/snapshots") }
+        filter { includeGroup("org.sayandev") }
+    }
 }
 
 dependencies {
+    compileOnly(files("dependencies/JiuJiuLib.jar"))
+    compileOnly(files("dependencies/SuperVanish-api-reference.jar"))
+    testImplementation(files("dependencies/SuperVanish-api-reference.jar"))
+    testImplementation(files("dependencies/JiuJiuLib.jar"))
     // Plugins
     compileOnly(fileTree("libs")) // No Maven repos :/
     compileOnly("com.github.mbax:VanishNoPacket:3.22") { isTransitive = false }
@@ -45,7 +55,7 @@ dependencies {
     compileOnly("org.sayandev:sayanvanish-bukkit:1.7.3-SNAPSHOT") { isTransitive = false }
 
     // Internal
-    compileOnly("org.spigotmc:spigot-api:26.3-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     compileOnly("net.kyori:adventure-text-minimessage:5.2.0")
     compileOnly("net.kyori:adventure-text-serializer-gson:5.2.0")
     implementation("co.aikar:acf-paper:0.5.1-SNAPSHOT")
@@ -85,6 +95,7 @@ tasks {
     }
 
     shadowJar {
+        archiveFileName.set("JiuJiuhuanying.jar")
         archiveClassifier.set("")
         enableAutoRelocation = true
         relocationPrefix = "net.insprill.cjm.libs"

@@ -1,0 +1,31 @@
+# 仅真实新玩家首次进服并通过登录检查后开放，隐身假进服不发奖励。
+# 修改本文件后停服重启；不会覆盖原进退服消息或经济数据库配置。
+enabled: true
+# 点击有效期，5～600秒；到期后的旧按钮不能领奖。
+window-seconds: 60
+# 每日上限按此时区跨日，不按玩家电脑时间计算。
+timezone: Asia/Shanghai
+reward:
+  # 每名欢迎者每位新人只领一次；J点通过JiuJiuLib的j货币接口发放。
+  amount: 100
+  # 每人每日最多欢迎奖励次数，1～10000；结果待核对也占次数，避免重试刷钱。
+  daily-limit: 10
+# 使用&颜色码；可用变量：{player}新人名、{amount}金额、{seconds}有效秒数、{limit}每日上限。
+# 整条invite提示可点击，运行/cjm welcome 随机令牌；不要手填新人UUID冒充令牌。
+messages:
+  # 测试按钮仅有jiujiuhuanying.test权限的人可见，目标玩家仍不能自领。
+  test-start: '&f[&4!&f] &e已请求为{player}开启欢迎测试；需目标在线、已登录且未隐身，同一时间仅开放一轮。'
+  test-invite: '&f[&4!&f] &e[测试·不发钱] &f{player} &a[点击模拟欢迎] &7（{seconds}秒）'
+  test-paid-invite: '&f[&4!&f] &e[测试·真实发钱] &f{player} &a[点击欢迎，领取{amount} J点] &7（{seconds}秒）'
+  test-success: '&f[&4!&f] &a欢迎{player}测试成功；本次没有发钱，也不占每日次数。'
+  test-welcomed: '&f[&4!&f] &e[测试] &b{player} &a欢迎了你，真实进服记录未修改。'
+  invite: '&f[&4!&f] &b欢迎新人 &f{player} &b加入！ &a[点击欢迎，领取 {amount} J点] &7（{seconds}秒内）'
+  success: '&f[&4!&f] &a你欢迎了 &f{player}&a，已获得 &e{amount} J点&a！'
+  # 此条发给新人，{player}在此表示欢迎者的名字。
+  welcomed: '&f[&4!&f] &b{player} &a欢迎你加入，祝你玩得开心！'
+  expired: '&f[&4!&f] &7这次欢迎已结束。'
+  self: '&f[&4!&f] &e不能欢迎自己领取奖励。'
+  already-or-limit: '&f[&4!&f] &e你已欢迎过这位新人，或今日已达到{limit}次上限。'
+  unavailable: '&f[&4!&f] &c欢迎奖励暂不可用，请稍后联系管理员。'
+  busy: '&f[&4!&f] &e欢迎操作繁忙，请稍后在有效期内再点。'
+  review: '&f[&4!&f] &e这次奖励需要管理员核对，请勿重复领取。'

@@ -1,3 +1,19 @@
+# JiuJiuhuanying
+
+由 [Insprill/custom-join-messages](https://github.com/Insprill/custom-join-messages) Fork 的啾啾进退服消息插件，保留原作者署名与 GPL-3.0 许可证。
+
+2026-11-24：插件注册名、工程名和成品文件名为 `JiuJiuhuanying` / `JiuJiuhuanying.jar`；保留原包名、主类、`cjm.*` 权限和旧命令，新增 `/jiujiuhuanying` 别名。内部版本为 `17.12.0-jiujiu.4`，默认附上游构建提交信息。
+
+新玩家首次进服后，其他已登录玩家可在60秒内点击欢迎按钮获得100 J点，每人每位新人仅一次，不能欢迎自己。每日默认10次上限，可在 `welcome-rewards.yml` 配置。仅真实首次进服/通过AuthMe登录开放，不从隐身假进服触发。需要 JiuJiuLib 2.3.0以上与有效的j货币提供者。持久记录 `data/welcome-rewards.journal` 在付款前写入意图，失败或不确定结果保留待核对记录，禁止自动重试；停服/重载后不恢复旧按钮有效期，不自动补发。
+
+本工程是上游完整源码的改名分支，不含历史 `17.12.0-jiujiu-svfix1` 的定制 SuperVanish 补丁，不使用 ASM 或二进制补丁构建。未完成 Shiroha/Folia 26.2 实服兼容验证，不应直接替换现有正式服。
+
+构建沿用 Gradle Wrapper（9.8.2），要求 JDK 25：Windows 使用 `gradlew.bat build`，其他系统使用 `./gradlew build`。本分支编译API为 `io.papermc.paper:paper-api:26.2.build.+`，实际构建解析版本需以记录为准；API编译通过不等于Shiroha实服验收。输出为 `build/libs/JiuJiuhuanying.jar`。`dependencies/JiuJiuLib.jar` 仅作编译输入，不是本项目安装成品，不会打入插件JAR。首次安装后的数据目录为 `plugins/JiuJiuhuanying`，不会自动迁移 `plugins/CustomJoinMessages`；不要同时加载两份插件。
+
+以下为保留的上游说明，其中下载、统计及发布平台链接指向原作者项目；Fork 的自动第三方发布已限制到上游仓库。
+
+---
+
 [![Spigot Downloads][spigot-downloads-shield]][spigot-url]
 [![bStats Servers][bstats-servers-shield]][bstats-url]
 [![Spigot Rating][spigot-rating-shield]][spigot-url]
@@ -202,3 +218,8 @@ Still need personalized support? Subscribe to my [Patreon][patreon-url] and join
 [minedown-url]: https://github.com/Phoenix616/MineDown#syntax
 [minimessage-url]: https://docs.advntr.dev/minimessage/index.html
 [legacy-color-codes-url]: https://minecraft.wiki/w/Formatting_codes#Color_codes
+
+管理员测试：`/cjm testwelcome <在线玩家> [preview|paid]`，默认preview不发钱；paid真实发奖且占每日次数。测试目标必须在线、已登录且未隐身。测试按钮只向具有 `jiujiuhuanying.test` 权限的其他管理员显示，目标不能自领，每轮一次；同一时间只开放一轮测试，60秒后可再次开。每轮使用独立随机记录，不重置真实进服/领奖记录。旧奖励配置保留，新提示缺项从内置默认值补齐，不覆盖原文件。MCSM控制台命令不加前导斜线。
+
+
+2026-11-24 隐身兼容恢复：识别SuperVanish的实际main为dev.philippcmd.supervanish.Main时，使用其公开getVanishManager().isVanished及VanishStateChangeEvent，不调用de.myzelyam接口。官方SuperVanish仍沿用官方挂钩。dependencies/SuperVanish-api-reference.jar仅作编译参考，不打入成品，不要求替换服务器隐身插件。服务器日志所示stealth4尚需实际验收，编译接口核对使用本地stealth3及D:/Github内同系列源码。
